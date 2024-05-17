@@ -1,0 +1,32 @@
+
+#!/bin/bash
+
+// Checking if domain and subdomain are provided
+if [$# -It 1]; then
+	echo "usage: $0 <dormain>"
+	exit 1
+fi
+dormain=$1
+subdomain=${2:-""}
+
+// A function: display_sub_info to retrive and display info
+
+display_sub_info() {
+	local domain=$1
+	local subdomain=$2
+
+// Access the DNS records and display 
+dig +short $domain.$subdomain | awk -v sub=$subdomain
+'{print "The subdomain [subdomain] is a [$0] record and points to" $1}'
+}
+
+// Retrieve the default subdomain if only the domain is provided
+if [ -z "$subdomain" ]; then
+	display_sub_info "www"
+	display_sub_info "Ib-01"
+	display_sub_info "web-01"
+	display_sub_info "web-02"
+else
+// if a specified subdomain is provided display info of given subdomain
+display_sub_info $subdomain
+fi
